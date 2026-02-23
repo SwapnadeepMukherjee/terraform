@@ -1,0 +1,87 @@
+provider "aws" {
+  region = "ap-south-1"
+
+  # Optional: If assuming a role in account 788531719687
+  # assume_role {
+  #   role_arn = "arn:aws:iam::788531719687:role/YourRoleName"
+  # }
+}
+
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
+  }
+  owners = ["099720109477"] # Canonical
+}
+
+/*
+resource "aws_instance" "app_server" {
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = var.instance_type
+  vpc_security_group_ids = [aws_security_group.app_sg.id]
+  subnet_id              = module.vpc.public_subnets[0]
+
+  associate_public_ip_address = true
+
+  tags = {
+    Name = var.instance_name
+  }
+}
+*/
+
+resource "aws_security_group" "app_sg" {
+  name        = "app-sg"
+  description = "Allow SSH"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "aws_subnet" "main" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.1.0/24"
+}
+
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.19.0"
+
+  name = "example-vpc"
+  cidr = "10.0.0.0/16"
+
+  azs = ["ap-south-1a", "ap-south-1b", "ap-south-1c"]
+
+  private_subnets = [
+    "10.0.1.0/24",
+    "10.0.2.0/24"
+  ]
+
+  public_subnets = [
+    "10.0.101.0/24"
+  ]
+
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+
+  enable_nat_gateway = true
+  single_nat_gateway = true
+}
