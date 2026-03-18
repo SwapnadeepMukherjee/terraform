@@ -1,9 +1,3 @@
-
-## 🚀 Projects Included
-
-### 1. Learn Terraform Get Started AWS
-Entry-level Terraform project for getting started with AWS cloud infrastructure. This project covers the fundamentals of Terraform and how to provision basic AWS resources.
-
 # Terraform Projects
 
 A collection of Terraform Infrastructure as Code (IaC) projects demonstrating best practices and real-world AWS cloud infrastructure configurations.
@@ -25,6 +19,11 @@ terraform/
 - AWS provider setup
 - Resource provisioning
 - State management
+
+## 🚀 Projects Included
+
+### 1. Learn Terraform Get Started AWS
+Entry-level Terraform project for getting started with AWS cloud infrastructure. This project covers the fundamentals of Terraform and how to provision basic AWS resources.
 
 ### 2. Terraform Project with AWS
 Advanced Terraform project demonstrating real-world AWS infrastructure patterns and best practices. This project includes more complex resource configurations and architectural patterns.
